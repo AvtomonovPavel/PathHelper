@@ -17,7 +17,7 @@ enum Direction {
 
 class PathHelper {
 public:
-	PathHelper(const XPSHelper& xpsHelper);
+	PathHelper(const XPSHelper& xpsHelper, int k);
 	
 	void FindPath(std::vector<int> st);
 	void WritePath(std::ofstream& out);
@@ -34,6 +34,8 @@ public:
 	//возращает последовательность наборов единичных вершин
 
 	void Optimize();
+
+	int GetK() const;
 
 private:
 	int FindVertex(std::vector<int> st);
@@ -53,4 +55,5 @@ private:
 	std::vector<int> path_;
 	
 	const XPSHelper& xpsHelper_;
+	const int k_;
 };

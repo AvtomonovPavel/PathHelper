@@ -6,13 +6,15 @@
 #include <windows.h>
 #include <cmath>
 
-#include <cassert>
-
-PathHelper::PathHelper(const XPSHelper& xpsHelper) : 
-	xpsHelper_(xpsHelper) 
+PathHelper::PathHelper(const XPSHelper& xpsHelper, int k) : 
+	xpsHelper_(xpsHelper),
+	k_(k)
 {}
 
-const int k = 40;
+int PathHelper::GetK() const {
+	return k_;
+}
+
 const int number_of_vert_rect = 3;
 const int number_of_hor_rect = 1;
 const int number_of_rect = number_of_vert_rect * number_of_hor_rect;
@@ -113,7 +115,7 @@ std::vector <int> PathHelper::snake_up_right(std::pair <int, int> start, int way
 					snake_way.push_back(j);
 					snake_way.push_back(day);
 					par += 1;
-					if (par == k) {
+					if (par == k_) {
 						day += 1;
 						par = 0;
 					}
@@ -132,7 +134,7 @@ std::vector <int> PathHelper::snake_up_right(std::pair <int, int> start, int way
 					snake_way.push_back(j);
 					snake_way.push_back(day);
 					par += 1;
-					if (par == k) {
+					if (par == k_) {
 						day += 1;
 						par = 0;
 					}
@@ -154,7 +156,7 @@ std::vector <int> PathHelper::snake_up_right(std::pair <int, int> start, int way
 			snake_way.push_back(j);
 			snake_way.push_back(day);
 			par += 1;
-			if (par == k) {
+			if (par == k_) {
 				day += 1;
 				par = 0;
 			}
@@ -179,7 +181,7 @@ std::vector <int> PathHelper::snake_up_left(std::pair <int, int> start, int way,
 					snake_way.push_back(j);
 					snake_way.push_back(day);
 					par += 1;
-					if (par == k) {
+					if (par == k_) {
 						day += 1;
 						par = 0;
 					}
@@ -198,7 +200,7 @@ std::vector <int> PathHelper::snake_up_left(std::pair <int, int> start, int way,
 					snake_way.push_back(j);
 					snake_way.push_back(day);
 					par += 1;
-					if (par == k) {
+					if (par == k_) {
 						day += 1;
 						par = 0;
 					}
@@ -218,7 +220,7 @@ std::vector <int> PathHelper::snake_up_left(std::pair <int, int> start, int way,
 				snake_way.push_back(j);
 				snake_way.push_back(day);
 				par += 1;
-				if (par == k) {
+				if (par == k_) {
 					day += 1;
 					par = 0;
 				}
@@ -244,7 +246,7 @@ std::vector <int> PathHelper::snake_down_right(std::pair <int, int> start, int w
 					snake_way.push_back(j);
 					snake_way.push_back(day);
 					par += 1;
-					if (par == k) {
+					if (par == k_) {
 						day += 1;
 						par = 0;
 					}
@@ -263,7 +265,7 @@ std::vector <int> PathHelper::snake_down_right(std::pair <int, int> start, int w
 					snake_way.push_back(j);
 					snake_way.push_back(day);
 					par += 1;
-					if (par == k) {
+					if (par == k_) {
 						day += 1;
 						par = 0;
 					}
@@ -284,7 +286,7 @@ std::vector <int> PathHelper::snake_down_right(std::pair <int, int> start, int w
 			snake_way.push_back(j);
 			snake_way.push_back(day);
 			par += 1;
-			if (par == k) {
+			if (par == k_) {
 				day += 1;
 				par = 0;
 			}
@@ -309,7 +311,7 @@ std::vector <int> PathHelper::snake_down_left(std::pair <int, int> start, int wa
 					snake_way.push_back(j);
 					snake_way.push_back(day);
 					par += 1;
-					if (par == k) {
+					if (par == k_) {
 						day += 1;
 						par = 0;
 					}
@@ -328,7 +330,7 @@ std::vector <int> PathHelper::snake_down_left(std::pair <int, int> start, int wa
 					snake_way.push_back(j);
 					snake_way.push_back(day);
 					par += 1;
-					if (par == k) {
+					if (par == k_) {
 						day += 1;
 						par = 0;
 					}
@@ -348,7 +350,7 @@ std::vector <int> PathHelper::snake_down_left(std::pair <int, int> start, int wa
 				snake_way.push_back(j);
 				snake_way.push_back(day);
 				par += 1;
-				if (par == k) {
+				if (par == k_) {
 					day += 1;
 					par = 0;
 				}
@@ -376,7 +378,7 @@ std::vector <int> PathHelper::snake_right_up(std::pair <int, int> start, int way
 					snake_way.push_back(i);
 					snake_way.push_back(day);
 					par += 1;
-					if (par == k) {
+					if (par == k_) {
 						day += 1;
 						par = 0;
 					}
@@ -395,7 +397,7 @@ std::vector <int> PathHelper::snake_right_up(std::pair <int, int> start, int way
 					snake_way.push_back(i);
 					snake_way.push_back(day);
 					par += 1;
-					if (par == k) {
+					if (par == k_) {
 						day += 1;
 						par = 0;
 					}
@@ -416,7 +418,7 @@ std::vector <int> PathHelper::snake_right_up(std::pair <int, int> start, int way
 			snake_way.push_back(i);
 			snake_way.push_back(day);
 			par += 1;
-			if (par == k) {
+			if (par == k_) {
 				day += 1;
 				par = 0;
 			}
@@ -441,7 +443,7 @@ std::vector <int> PathHelper::snake_right_down(std::pair <int, int> start, int w
 					snake_way.push_back(i);
 					snake_way.push_back(day);
 					par += 1;
-					if (par == k) {
+					if (par == k_) {
 						day += 1;
 						par = 0;
 					}
@@ -460,7 +462,7 @@ std::vector <int> PathHelper::snake_right_down(std::pair <int, int> start, int w
 					snake_way.push_back(i);
 					snake_way.push_back(day);
 					par += 1;
-					if (par == k) {
+					if (par == k_) {
 						day += 1;
 						par = 0;
 					}
@@ -481,7 +483,7 @@ std::vector <int> PathHelper::snake_right_down(std::pair <int, int> start, int w
 			snake_way.push_back(i);
 			snake_way.push_back(day);
 			par += 1;
-			if (par == k) {
+			if (par == k_) {
 				day += 1;
 				par = 0;
 			}
@@ -506,7 +508,7 @@ std::vector <int> PathHelper::snake_left_up(std::pair <int, int> start, int way,
 					snake_way.push_back(i);
 					snake_way.push_back(day);
 					par += 1;
-					if (par == k) {
+					if (par == k_) {
 						day += 1;
 						par = 0;
 					}
@@ -525,7 +527,7 @@ std::vector <int> PathHelper::snake_left_up(std::pair <int, int> start, int way,
 					snake_way.push_back(i);
 					snake_way.push_back(day);
 					par += 1;
-					if (par == k) {
+					if (par == k_) {
 						day += 1;
 						par = 0;
 					}
@@ -546,7 +548,7 @@ std::vector <int> PathHelper::snake_left_up(std::pair <int, int> start, int way,
 			snake_way.push_back(i);
 			snake_way.push_back(day);
 			par += 1;
-			if (par == k) {
+			if (par == k_) {
 				day += 1;
 				par = 0;
 			}
@@ -570,7 +572,7 @@ std::vector <int> PathHelper::snake_left_down(std::pair <int, int> start, int wa
 					snake_way.push_back(i);
 					snake_way.push_back(day);
 					par += 1;
-					if (par == k) {
+					if (par == k_) {
 						day += 1;
 						par = 0;
 					}
@@ -589,7 +591,7 @@ std::vector <int> PathHelper::snake_left_down(std::pair <int, int> start, int wa
 					snake_way.push_back(i);
 					snake_way.push_back(day);
 					par += 1;
-					if (par == k) {
+					if (par == k_) {
 						day += 1;
 						par = 0;
 					}
@@ -609,7 +611,7 @@ std::vector <int> PathHelper::snake_left_down(std::pair <int, int> start, int wa
 			snake_way.push_back(i);
 			snake_way.push_back(day);
 			par += 1;
-			if (par == k) {
+			if (par == k_) {
 				day += 1;
 				par = 0;
 			}
