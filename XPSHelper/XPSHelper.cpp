@@ -120,9 +120,17 @@ XPSHelper::XPSHelper(const char* XPSFilePath) {
 		geomToNum_[geometry_[i]] = i;
 
 	std::cout << "Geometry OK" << std::endl;
+
+	height_ = 0;
+	for (int i = 0; i < geometry_.size(); ++i)
+		height_ = std::max(height_, geometry_[i].second);
+
+	width_ = 0;
+	for (int i = 0; i < geometry_.size(); ++i)
+		width_ = std::max(width_, geometry_[i].first);
+
 	std::cout << "XPSHelper constructor OK" << std::endl;
 }
-
 
 int XPSHelper::GetWellNum(std::pair<int, int> coords) const {
 	return geomToNum_.at(coords);
@@ -135,4 +143,12 @@ std::pair<int, int> XPSHelper::GetWellCoords(int num) const {
 
 std::pair<int, int> XPSHelper::GetOldCoords(int num) const {
 	return oldGeometry_[num];
+}
+
+int XPSHelper::GetWidth() const {
+	return width_;
+}
+
+int XPSHelper::GetHeight() const {
+	return height_;
 }

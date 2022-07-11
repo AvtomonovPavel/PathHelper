@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../G3/G3.hpp"
+#include "../XPSHelper/XPSHelper.hpp"
 
 #include <string>
 #include <fstream>
@@ -17,7 +17,7 @@ enum Direction {
 
 class PathHelper {
 public:
-	PathHelper(const G3& g3);
+	PathHelper(const XPSHelper& xpsHelper);
 	
 	void FindPath(std::vector<int> st);
 	void WritePath(std::ofstream& out);
@@ -47,5 +47,6 @@ private:
 	std::vector<std::pair<int, int>> GetVertexGeometry(int vertex);
 
 	std::vector<int> path_;
-	const G3& g3_;
+	
+	const XPSHelper& xpsHelper_;
 };

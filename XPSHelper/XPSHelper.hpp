@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <vector>
 #include <map>
 
@@ -12,6 +11,9 @@ public:
 	int GetWellNum(std::pair<int, int> coords) const;
 	std::pair<int, int> GetWellCoords(int num) const;
 	std::pair<int, int> GetOldCoords(int num) const;
+
+	int GetHeight() const;
+	int GetWidth() const;
 
 	bool IsNeighbours(int lhs, int rhs) const {
 		const auto& [x1, y1] = GetWellCoords(lhs);
@@ -38,4 +40,7 @@ private:
 	std::vector<std::pair<int, int>> oldGeometry_;
 
 	std::map<std::pair<int, int>, int> geomToNum_;
+
+	int height_,
+		width_;
 };

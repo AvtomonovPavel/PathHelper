@@ -7,23 +7,24 @@
 #include <cmath>
 
 
-PathHelper::PathHelper(const G3& g3) : 
-	g3_(g3) 
+PathHelper::PathHelper(const XPSHelper& xpsHelper) : 
+	xpsHelper_(xpsHelper) 
 {}
-const int number_of_x_sections = 72;
-const int number_of_y_sections = 74;
+
+const int number_of_x_sections = 72;  // !!!!!!!!!!!!–î–æ—Å—Ç–∞—Ç—å –∏–∑ XPS_Helper
+const int number_of_y_sections = 74; // !!!!!!!!!!!!–î–æ—Å—Ç–∞—Ç—å –∏–∑ XPS_Helper
 const int k = 40;
 const int number_of_vert_rect = 3;
 const int number_of_hor_rect = 1;
 const int number_of_rect = number_of_vert_rect * number_of_hor_rect;
 double a[number_of_rect][6];
 int ind = 1;
-int par_of_rect;
+int par_of_rect; // ?????????????????????????????? !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! –Ω–æ–º–µ—Ä –≤ –∫–æ—Ç–æ—Ä–æ–º —Å–µ–π—á–∞—Å
 int day = 0;
 int par = 0;
 std::vector<std::vector<int>> matrix(number_of_y_sections, std::vector <int>(number_of_x_sections));
 
-
+// ??? ?? ? ? ?? ? ? ?? ? ? 
 std::vector<std::vector<int>> create_field() {
 	std::vector<std::vector<int>> vector_of_pairs_new(number_of_y_sections * number_of_x_sections, std::vector <int>(3));
 	std::ofstream out("field.txt", std::ios::out);
@@ -33,30 +34,32 @@ std::vector<std::vector<int>> create_field() {
 		throw std::invalid_argument("\n"
 			"input file is not open\n"
 		);
-	int i = 0;
+	int i = 0; //!!!!!!!!!!!!!!!!!!!!!!!!
 	while (!in.eof()) {
-		std::string line = "";
+		//std::string line = ""; ? 
 		std::string new_line_1 = "";
 		std::string new_line_2 = "";
-		getline(in, line);
+		//getline(in, line); ?? ?????????????????????????????????????????????????????????
 		in >> new_line_1 >> new_line_2;
-		vector_of_pairs[i][0] = std::stoi(new_line_1);
-		vector_of_pairs[i][1] = std::stoi(new_line_2);
+		vector_of_pairs[i][0] = std::stoi(new_line_1); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		vector_of_pairs[i][1] = std::stoi(new_line_2); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		i += 1;
 	}
 	in.close();
-	int param = 0;
+	int param = 0; // !!!!!!!!!!!!!!!
 	for (int i = 0; i < number_of_x_sections; i++) {
 		for (int j = 0; j < number_of_y_sections; j++) {
 			if (not out.is_open())
 				throw std::invalid_argument("\n"
 					"Output file at output stream is not open\n"
 				);
-			bool k = false;
-			for (int m = 0; m < vector_of_pairs.size(); m++) {
+			bool k = false; //!!!!!!!!!!!!!!!!
+			for (int m = 0; m < vector_of_pairs.size(); m++) { // !!!!!!!!!!!!!!!!!!
 				if (i == vector_of_pairs[m][0] && j == vector_of_pairs[m][1])
 					k = true;
 			}
+
+			// !!!!!!!!!!!!!
 			if (k) {
 				vector_of_pairs_new[param][0] = i;
 				vector_of_pairs_new[param][1] = j;
@@ -73,11 +76,14 @@ std::vector<std::vector<int>> create_field() {
 			param += 1;
 		}
 	}
+
+	out.close(); // ?????????
+
 	return vector_of_pairs_new;
 }
 
 void create_walls(int p, int direction) {
-	int m = number_of_y_sections / (p + 1) + 1;
+	int m = number_of_y_sections / (p + 1) + 1; // –∫–æ–ª–≤–æ –≤–µ—Ä—à–∏–Ω –≤ –±–ª–æ–∫ ???????????????????? 
 	if (direction == 0) {
 		int ma = 0;
 		for (int j = 0; j <= p; j++) {
@@ -701,39 +707,37 @@ std::pair <int, int> find_the_neighbor(std::pair <int,int> end) {
 
 
 void PathHelper::WriteXPSPath() {
-	double m = number_of_y_sections / (2. + 1.);
-	std::cout << m << std::endl << std::endl;
+//	double m = number_of_y_sections / (2. + 1.);
+//	std::cout << m << std::endl << std::endl;
 	std::cout << "Part_1_start" << "\n";
-	std::vector<std::vector<int> > vector_of_pairs_new = create_field();
+	std::vector<std::vector<int> > vector_of_pairs_new = create_field(); //28 :/
 	std::cout << "Part_1_finish" << "\n";
 
 	int size_of_direction = 2;
-	int direction = 0;
-
-
+	int direction = 0; // ????
 
 	std::cout << "Part_3_start" << "\n";
-	std::pair<int, int> start;
-	int rect = 0;
+	std::pair<int, int> start; // (., .)
+	int rect = 0; //???
 	a[rect][5] = 1;
 	int way = 0;
 	std::cout << "way " << way << std::endl;
 	std::cout << "Part_3_finish" << "\n";
-	std::pair <int, int> end;
-	for (int p = 0; p <= 2; p++) {
-		for (int i = 0; i < size_of_direction; i++) {
-			for (int j = 0; j < 4; j++) {
-				day = 0;
-				par = 0;
-				int sum = 0;
+
+	std::pair <int, int> end; // (., .)
+	for (int p = 0; p <= 2; p++) { // p - –∫–æ–ª–≤–æ —É–ø–æ—Ä—ã
+		for (int i = 0; i < size_of_direction; i++) { // i - –æ—Ä–∏–µ–Ω—Ç–∞—Ü–∏—è —É–ø–æ—Ä–æ–≤
+			for (int j = 0; j < 4; j++) { // j - –Ω–æ–º–µ—Ä —É–≥–ª–∞
+				day = 0; //–Ω–æ–º–µ—Ä –¥–Ω—è –≤ –∫–æ—Ç–æ—Ä—ã–π —Ä–∞—Å–∫–ª–∞–¥–∫–∞
+				par = 0; //????
+				int sum = 0; //???
 				if (j == 0) {
 					start = std::make_pair(0, 0);
-					par_of_rect = 0;
-
+					par_of_rect = 0; // !!!!!!!!!!!!!!!!!!!!!!! 22
 				}
 				if (j == 1 && i == 0) {
-					start = std::make_pair(71, 0);
-					par_of_rect = 0;
+					start = std::make_pair(71, 0); // –ø—Ä–∞–≤—ã–π –Ω–∏–∂–Ω–∏–π —É–≥–æ–ª
+					par_of_rect = 0; // !!!!!!!!!!!!!!!!!!!!!!! 22
 				}
 				if (j == 1 && i == 1) {
 					start = std::make_pair(71, 0);
@@ -752,7 +756,7 @@ void PathHelper::WriteXPSPath() {
 					par_of_rect = 0;
 				}
 
-				create_walls(p, i);
+				create_walls(p, i); // ??? 85
 				a[par_of_rect][5] = 1;
 				std::cout << start.first << " " << start.second << std::endl;
 				std::vector <int> snake_way;
@@ -793,99 +797,24 @@ void PathHelper::WriteXPSPath() {
 				}
 				std::cout << "file_walls_" << p << "_direction_" << i << "_start_" << j << std::endl << std::endl;
 				std::ofstream out;
-				std::string filename; // ‚ÂÏÂÌÌ˚È ·ÛÙÂ; // Ò‡Ï Ù‡ÈÎ
-				std::string path; // Ò˛‰‡ Ï˚ ·Û‰ÂÏ ÎÓÊËÚ¸ ÌÓ‚˚Â ËÏÂÌ‡
+				std::string filename; // √¢√∞√•√¨√•√≠√≠√ª√© √°√≥√¥√•√∞; // √±√†√¨ √¥√†√©√´
+				std::string path; // √±√æ√§√† √¨√ª √°√≥√§√•√¨ √´√Æ√¶√®√≤√º √≠√Æ√¢√ª√• √®√¨√•√≠√†
 				filename = "walls_" + std::to_string(p) + "_start_" + std::to_string(j) + "_direction_" + std::to_string(i) + ".txt";
-				path = ".\\"; // ˜‡ÒÚ¸ ËÏÂÌË Ù‡ÈÎ‡ (ÓÌÓ ·Û‰ÂÚ ÔÓÒÚÓˇÌÌ˚Ï)
-				path += filename; // ÒÓ·Ë‡ÂÏ ÔÛÚ¸ Ë ËÏˇ ‰Îˇ ÌÓ‚Ó„Ó Ù‡ÈÎ‡
-				out.open(path.c_str()); // ÒÓÁ‰‡Ú¸ ÌÓ‚˚È Ù‡ÈÎ Ò ÌÓ‚˚Ï ËÏÂÌÂÏ
+				path = ".\\"; // √∑√†√±√≤√º √®√¨√•√≠√® √¥√†√©√´√† (√Æ√≠√Æ √°√≥√§√•√≤ √Ø√Æ√±√≤√Æ√ø√≠√≠√ª√¨)
+				path += filename; // √±√Æ√°√®√∞√†√•√¨ √Ø√≥√≤√º √® √®√¨√ø √§√´√ø √≠√Æ√¢√Æ√£√Æ √¥√†√©√´√†
+				out.open(path.c_str()); // √±√Æ√ß√§√†√≤√º √≠√Æ√¢√ª√© √¥√†√©√´ √± √≠√Æ√¢√ª√¨ √®√¨√•√≠√•√¨
 				for (int i = 0; i < snake_way.size(); i++) {
 					//std::cout << snake_way[i] << "\n";
 					if (i % 3 == 0)
 						//out << snake_way[i] << " " << snake_way[i + 1] << " ";
-					out << g3_.GetXPSHelper().GetOldCoords(g3_.GetXPSHelper().GetWellNum(std::make_pair(snake_way[i], snake_way[i + 1]))).first << " "
-					<< g3_.GetXPSHelper().GetOldCoords(g3_.GetXPSHelper().GetWellNum(std::make_pair(snake_way[i], snake_way[i + 1]))).second << " ";
+					out << xpsHelper_.GetOldCoords(xpsHelper_.GetWellNum(std::make_pair(snake_way[i], snake_way[i + 1]))).first << " "
+					<< xpsHelper_.GetOldCoords(xpsHelper_.GetWellNum(std::make_pair(snake_way[i], snake_way[i + 1]))).second << " ";
 					if ((i % 3 == 2))
 						out << snake_way[i] << std::endl;
 				}
-				out.close(); // Ó·ˇÁ‡ÚÂÎ¸ÌÓ Á‡Í˚‚‡ÂÏ
+				out.close(); // √Æ√°√ø√ß√†√≤√•√´√º√≠√Æ √ß√†√™√∞√ª√¢√†√•√¨
 			}
 		}
 	}
 
-
-
-
-
-
-	/*
-	std::cout << "Part_4_start" << "\n";
-
-
-	std::vector <int> snake_way;
-	snake_way = snake_down_right(start, way, rect, vector_of_pairs_new, snake_way);
-	std::cout << "Part_4_finish" << "\n";
-
-
-
-	std::cout << "Part_5_start" << "\n";
-	std::pair <int, int> end = std::make_pair(snake_way[snake_way.size() - 3], snake_way[snake_way.size()-2]);
-	std::cout << snake_way[snake_way.size() - 3] << " " << end.second << std::endl;
-	start = find_the_neighbor(end);
-	std::cout << snake_way.size() << " " <<  snake_way[snake_way.size() - 3] << " " << snake_way[snake_way.size() - 2] << std::endl;
-	std::cout <<  start.first << " " << start.second << std::endl;
-	std::cout << "Part_5_finish" << "\n";
-
-
-
-
-	std::cout << "Part_6_start" << "\n";
-	way = find_the_wall(start, par_of_rect);
-	std::cout << "way" << way << std::endl;
-	std::cout << "Part_6_finish" << "\n";
-
-
-
-	std::cout << "Part_7_start" << "\n";
-	snake_way = snake_down_left(start, way, par_of_rect, vector_of_pairs_new, snake_way);
-	std::cout << "Part_7_finish" << "\n";
-
-
-	std::cout << "Part_8_start" << "\n";
-	end = std::make_pair(snake_way[snake_way.size() - 3], snake_way[snake_way.size() - 2]);
-	std::cout << end.first << " " << end.second << std::endl;
-	std::cout << "Part_8_finish" << "\n";
-
-	start = find_the_neighbor(end);
-	std::cout << start.first << " " << start.second << std::endl;
-	std::cout << "Part_5_finish" << "\n";
-
-
-
-
-	std::cout << "Part_6_start" << "\n";
-	way = find_the_wall(start, par_of_rect);
-	std::cout << "way" << way << std::endl;
-	std::cout << "Part_6_finish" << "\n";
-
-
-
-	std::cout << "Part_7_start" << "\n";
-	snake_way = snake_down_right(start, way, par_of_rect, vector_of_pairs_new, snake_way);
-	std::cout << "Part_7_finish" << "\n";
-
-
-	std::cout << "Part_8_start" << "\n";
-	end = std::make_pair(snake_way[snake_way.size() - 3], snake_way[snake_way.size() - 2]);
-	std::cout << "Part_8_finish" << "\n";
-	std::cout << "Part_9_start" << "\n";
-	for (int i = 0; i < snake_way.size(); i++) {
-		//std::cout << snake_way[i] << "\n";
-		if (i % 3 == 0)
-			out << g3_.GetXPSHelper().GetOldCoords(g3_.GetXPSHelper().GetWellNum(std::make_pair(snake_way[i], snake_way[i + 1]))).first << " "
-			<< g3_.GetXPSHelper().GetOldCoords(g3_.GetXPSHelper().GetWellNum(std::make_pair(snake_way[i], snake_way[i + 1]))).second << " ";
-		if ((i % 3 == 2))
-			out << snake_way[i] << std::endl;
-	}
-	std::cout << "Part_9_finish" << "\n"; */
 }

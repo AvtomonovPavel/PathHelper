@@ -1,17 +1,16 @@
 #include <iostream>
 
 #include "TimeChecker\TimeChecker.hpp"
-#include "G3\G3.hpp"
 #include "PathHelper\PathHelper.hpp"
+#include "XPSHelper\XPSHelper.hpp"
 
 int main(int argc, char* argv[]) {
 	TimeChecker checkTime;
 	XPSHelper xps(argv[1]);
-	G3 g3(xps, 10);
 
 	std::ofstream out("vis.txt", std::ios::out);
 	std::ofstream out_new("x_way.txt", std::ios::out);
-	PathHelper ph(g3);
+	PathHelper ph(xps);
 
 	//out << g3.GetXPSHelper().GetWellCount() << "\n";
 	//for (int i = 0; i < g3.GetXPSHelper().GetWellCount(); ++i)
