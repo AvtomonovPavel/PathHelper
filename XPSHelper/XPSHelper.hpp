@@ -15,6 +15,8 @@ public:
 	int GetHeight() const;
 	int GetWidth() const;
 
+	const std::map<std::pair<int, int>, int>& GetGeomToNum() const;
+
 	bool IsNeighbours(int lhs, int rhs) const {
 		const auto& [x1, y1] = GetWellCoords(lhs);
 		const auto& [x2, y2] = GetWellCoords(rhs);

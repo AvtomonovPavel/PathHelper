@@ -154,3 +154,7 @@ int XPSHelper::GetWidth() const {
 int XPSHelper::GetHeight() const {
 	return height_;
 }
+
+const std::map<std::pair<int, int>, int>& XPSHelper::GetGeomToNum() const {
+	return geomToNum_;
+}

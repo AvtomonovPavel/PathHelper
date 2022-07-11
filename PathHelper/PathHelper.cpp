@@ -22,62 +22,21 @@ int par_of_rect; // ?????????????????????????????? !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 int day = 0;
 int par = 0;
 
-// ??? ?? ? ? ?? ? ? ?? ? ? 
+// ??? 
 std::vector<std::vector<int>> PathHelper::create_field() const {
-	std::vector<std::vector<int>> vector_of_pairs_new(xpsHelper_.GetHeight() * xpsHelper_.GetWidth(), std::vector <int>(3));
-	std::ofstream out("field.txt", std::ios::out);
-	std::vector<std::vector<int>> vector_of_pairs(xpsHelper_.GetHeight() * xpsHelper_.GetWidth(), std::vector <int>(2));
-	std::ifstream in("true_field.txt", std::ios::in);
-	if (not in.is_open())
-		throw std::invalid_argument("\n"
-			"input file is not open\n"
-		);
-	int i = 0; //!!!!!!!!!!!!!!!!!!!!!!!!
-	while (!in.eof()) {
-		//std::string line = ""; ? 
-		std::string new_line_1 = "";
-		std::string new_line_2 = "";
-		//getline(in, line); ?? ?????????????????????????????????????????????????????????
-		in >> new_line_1 >> new_line_2;
-		vector_of_pairs[i][0] = std::stoi(new_line_1); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		vector_of_pairs[i][1] = std::stoi(new_line_2); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		i += 1;
-	}
-	in.close();
-	int param = 0; // !!!!!!!!!!!!!!!
-	for (int i = 0; i < xpsHelper_.GetWidth(); i++) {
-		for (int j = 0; j < xpsHelper_.GetHeight(); j++) {
-			if (not out.is_open())
-				throw std::invalid_argument("\n"
-					"Output file at output stream is not open\n"
-				);
-			bool k = false; //!!!!!!!!!!!!!!!!
-			for (int m = 0; m < vector_of_pairs.size(); m++) { // !!!!!!!!!!!!!!!!!!
-				if (i == vector_of_pairs[m][0] && j == vector_of_pairs[m][1])
-					k = true;
-			}
+	std::vector<std::vector<int>> ret(xpsHelper_.GetHeight() * xpsHelper_.GetWidth(), std::vector <int>(3));
 
-			// !!!!!!!!!!!!!
-			if (k) {
-				vector_of_pairs_new[param][0] = i;
-				vector_of_pairs_new[param][1] = j;
-				vector_of_pairs_new[param][2] = 1;
-				out << i << " " << j << " " << 1 << '\n';
+	int wellNum = 0;
+	for (int i = 0; i < xpsHelper_.GetWidth(); ++i)
+		for (int j = 0; j < xpsHelper_.GetHeight(); ++j) {
+			ret[wellNum][0] = i;
+			ret[wellNum][1] = j;
+			ret[wellNum][2] = (xpsHelper_.GetGeomToNum().count(std::make_pair(i, j))) ? 1 : 0;
 
-			}
-			else {
-				vector_of_pairs_new[param][0] = i;
-				vector_of_pairs_new[param][1] = j;
-				vector_of_pairs_new[param][2] = 0;
-				out << i << " " << j << " " << 0 << '\n';
-			}
-			param += 1;
+			wellNum++;
 		}
-	}
 
-	out.close(); // ?????????
-
-	return vector_of_pairs_new;
+	return ret;
 }
 
 void PathHelper::create_walls(int p, int direction) const {

@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-O3")
 
 add_executable(Pathfinder Pathfinder.cpp)
-add_dependencies(Pathfinder XPSTest true_field)
+add_dependencies(Pathfinder XPSTest)
 
 add_subdirectory(XPSHelper)
 target_link_libraries(Pathfinder PUBLIC XPSHelper)
@@ -22,8 +22,4 @@ target_include_directories(Pathfinder PUBLIC PathHelper)
 
 add_custom_target(XPSTest
 	${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/XPSTest ${CMAKE_CURRENT_BINARY_DIR}/XPSTest 
-)
-
-add_custom_target(true_field
-	${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/true_field.txt ${CMAKE_CURRENT_BINARY_DIR}/true_field.txt
 )
