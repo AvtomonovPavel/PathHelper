@@ -792,11 +792,11 @@ void PathHelper::WriteXPSPath() {
 
 				}
 				std::cout << "file_walls_" << p << "_direction_" << i << "_start_" << j << std::endl << std::endl;
-				std::ofstream out; // сам файл
-				std::string filename; // временный буфер
+				std::ofstream out;
+				std::string filename; // временный буфер; // сам файл
 				std::string path; // сюда мы будем ложить новые имена
 				filename = "walls_" + std::to_string(p) + "_start_" + std::to_string(j) + "_direction_" + std::to_string(i) + ".txt";
-				path = "C:\\Users\\avtomonov.pu\\Desktop\\new_one\\PathfinderRE\\"; // часть имени файла (оно будет постоянным)
+				path = ".\\"; // часть имени файла (оно будет постоянным)
 				path += filename; // собираем путь и имя для нового файла
 				out.open(path.c_str()); // создать новый файл с новым именем
 				for (int i = 0; i < snake_way.size(); i++) {
