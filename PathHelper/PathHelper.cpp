@@ -6,13 +6,12 @@
 #include <windows.h>
 #include <cmath>
 
+#include <cassert>
 
 PathHelper::PathHelper(const XPSHelper& xpsHelper) : 
 	xpsHelper_(xpsHelper) 
 {}
 
-const int number_of_x_sections = 72;  // !!!!!!!!!!!!Достать из XPS_Helper
-const int number_of_y_sections = 74; // !!!!!!!!!!!!Достать из XPS_Helper
 const int k = 40;
 const int number_of_vert_rect = 3;
 const int number_of_hor_rect = 1;
@@ -22,13 +21,12 @@ int ind = 1;
 int par_of_rect; // ?????????????????????????????? !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! номер в котором сейчас
 int day = 0;
 int par = 0;
-std::vector<std::vector<int>> matrix(number_of_y_sections, std::vector <int>(number_of_x_sections));
 
 // ??? ?? ? ? ?? ? ? ?? ? ? 
-std::vector<std::vector<int>> create_field() {
-	std::vector<std::vector<int>> vector_of_pairs_new(number_of_y_sections * number_of_x_sections, std::vector <int>(3));
+std::vector<std::vector<int>> PathHelper::create_field() const {
+	std::vector<std::vector<int>> vector_of_pairs_new(xpsHelper_.GetHeight() * xpsHelper_.GetWidth(), std::vector <int>(3));
 	std::ofstream out("field.txt", std::ios::out);
-	std::vector<std::vector<int>> vector_of_pairs(number_of_y_sections * number_of_x_sections, std::vector <int>(2));
+	std::vector<std::vector<int>> vector_of_pairs(xpsHelper_.GetHeight() * xpsHelper_.GetWidth(), std::vector <int>(2));
 	std::ifstream in("true_field.txt", std::ios::in);
 	if (not in.is_open())
 		throw std::invalid_argument("\n"
@@ -47,8 +45,8 @@ std::vector<std::vector<int>> create_field() {
 	}
 	in.close();
 	int param = 0; // !!!!!!!!!!!!!!!
-	for (int i = 0; i < number_of_x_sections; i++) {
-		for (int j = 0; j < number_of_y_sections; j++) {
+	for (int i = 0; i < xpsHelper_.GetWidth(); i++) {
+		for (int j = 0; j < xpsHelper_.GetHeight(); j++) {
 			if (not out.is_open())
 				throw std::invalid_argument("\n"
 					"Output file at output stream is not open\n"
@@ -82,8 +80,8 @@ std::vector<std::vector<int>> create_field() {
 	return vector_of_pairs_new;
 }
 
-void create_walls(int p, int direction) {
-	int m = number_of_y_sections / (p + 1) + 1; // колво вершин в блок ???????????????????? 
+void PathHelper::create_walls(int p, int direction) const {
+	int m = xpsHelper_.GetHeight() / (p + 1) + 1; // колво вершин в блок ???????????????????? 
 	if (direction == 0) {
 		int ma = 0;
 		for (int j = 0; j <= p; j++) {
@@ -91,11 +89,11 @@ void create_walls(int p, int direction) {
 			a[ma][0] = ma;
 			a[ma][1] = -0.5;
 			a[ma][5] = 0;
-			if ((j + 1) * m <= number_of_y_sections)
+			if ((j + 1) * m <= xpsHelper_.GetHeight())
 				a[ma][3] = (j + 1) * m - 0.5;
 			else
-				a[ma][3] = number_of_y_sections - 0.5;
-			a[ma][2] = number_of_x_sections - 0.5;
+				a[ma][3] = xpsHelper_.GetHeight() - 0.5;
+			a[ma][2] = xpsHelper_.GetWidth() - 0.5;
 			std::cout << a[ma][0] << " " << a[ma][1] << " " << a[ma][2] << " " << a[ma][3] << " " << a[ma][4] << " " << a[ma][5] << std::endl;
 			ma += 1;
 		}
@@ -103,15 +101,15 @@ void create_walls(int p, int direction) {
 	if (direction == 1) {
 		int ma = 0;
 		for (int i = 0; i <= p; i++) {
-			a[ma][3] = number_of_y_sections - 0.5;
+			a[ma][3] = xpsHelper_.GetHeight() - 0.5;
 			a[ma][4] = -0.5;
 			a[ma][0] = ma;
 			a[ma][1] = i * m - 0.5;
 			a[ma][5] = 0;
-			if ((i + 1) * m <= number_of_x_sections)
+			if ((i + 1) * m <= xpsHelper_.GetWidth())
 				a[ma][2] = (i + 1) * m - 0.5;
 			else
-				a[ma][2] = number_of_x_sections - 0.5;
+				a[ma][2] = xpsHelper_.GetWidth() - 0.5;
 			std::cout << a[ma][0] << " " << a[ma][1] << " " << a[ma][2] << " " << a[ma][3] << " " << a[ma][4] << " " << a[ma][5] << std::endl;
 			ma += 1;
 		}
@@ -146,7 +144,7 @@ std::vector <int> PathHelper::snake_up_right(std::pair <int, int> start, int way
 	std::cout << a[rect][1] + 0.5 << " " << a[rect][2] - 0.5 << " " << a[rect][4] + 0.5 << " " << a[rect][3] - 0.5 << std::endl;
 	for (int i = a[rect][1] + 0.5; i < a[rect][2] - 0.5; i++) {
 		if (i % 2 == int(a[rect][1] + 0.5) % 2) {
-			para = i * number_of_y_sections + a[rect][4] + 0.5;
+			para = i * xpsHelper_.GetHeight() + a[rect][4] + 0.5;
 			//std::cout << para << " " << vector_of_pairs_new[para][0] << " " << vector_of_pairs_new[para][2] << std::endl;
 			for (int j = a[rect][4] + 0.5; j <= a[rect][3] - 0.5; j++)
 			{
@@ -166,7 +164,7 @@ std::vector <int> PathHelper::snake_up_right(std::pair <int, int> start, int way
 		}
 		else
 		{
-			para = para + number_of_y_sections - 1;
+			para = para + xpsHelper_.GetHeight() - 1;
 			for (int j = a[rect][3] - 0.5; j >= a[rect][4] + 0.5; j--)
 			{
 				//std::cout << vector_of_pairs_new[para][0] << " " << i << " " << vector_of_pairs_new[para][1] << " " << j << " " << vector_of_pairs_new[para][2] << std::endl;
@@ -188,7 +186,7 @@ std::vector <int> PathHelper::snake_up_right(std::pair <int, int> start, int way
 	}
 	for (int i = a[rect][2] - 0.5; i <= a[rect][2] - 0.5; i++) {
 		//std::cout << "we_in_circle";
-		para = i * number_of_y_sections + a[rect][4] + 0.5;
+		para = i * xpsHelper_.GetHeight() + a[rect][4] + 0.5;
 	for (int j = a[rect][4] + 0.5; j <= a[rect][3] - 0.5; j++)
 	{
 		//std::cout << vector_of_pairs_new[para][0] << " " << i << " " << vector_of_pairs_new[para][1] << " " << j << " " << vector_of_pairs_new[para][2] << std::endl;
@@ -213,7 +211,7 @@ std::vector <int> PathHelper::snake_up_left(std::pair <int, int> start, int way,
 	//std::cout << "rect" << rect << std::endl;
 	for (int i = a[rect][2] - 0.5; i > a[rect][1] + 0.5; i--) {
 		if (i % 2 == int(a[rect][2] - 0.5) % 2) {
-			para = i * number_of_y_sections + a[rect][4] + 0.5;
+			para = i * xpsHelper_.GetHeight() + a[rect][4] + 0.5;
 			for (int j = a[rect][4] + 0.5; j <= a[rect][3] - 0.5; j++)
 			{
 				//std::cout << vector_of_pairs_new[para][0] << " " << i << " " << vector_of_pairs_new[para][1] << " " << j << " " << vector_of_pairs_new[para][2] << std::endl;
@@ -232,7 +230,7 @@ std::vector <int> PathHelper::snake_up_left(std::pair <int, int> start, int way,
 		}
 		else
 		{
-			para = para - number_of_y_sections - 1;
+			para = para - xpsHelper_.GetHeight() - 1;
 			for (int j = a[rect][3] - 0.5; j >= a[rect][4] + 0.5; j--)
 			{
 				//std::cout << vector_of_pairs_new[para][0] << " " << i << " " << vector_of_pairs_new[para][1] << " " << j << " " << vector_of_pairs_new[para][2] << std::endl;
@@ -252,7 +250,7 @@ std::vector <int> PathHelper::snake_up_left(std::pair <int, int> start, int way,
 		}
 	}
 	for (int i = a[rect][1] + 0.5; i >= a[rect][1] + 0.5; i--) {
-		para = i * number_of_y_sections + a[rect][4] + 0.5;
+		para = i * xpsHelper_.GetHeight() + a[rect][4] + 0.5;
 		for (int j = a[rect][4] + 0.5; j <= a[rect][3] - 0.5; j++)
 		{
 			//std::cout << vector_of_pairs_new[para][0] << " " << i << " " << vector_of_pairs_new[para][1] << " " << j << " " << vector_of_pairs_new[para][2] << std::endl;
@@ -277,7 +275,7 @@ std::vector <int> PathHelper::snake_down_right(std::pair <int, int> start, int w
 	int para = 0;
 	for (int i = a[rect][1] + 0.5; i < a[rect][2] - 0.5; i++) {
 		if (i % 2 == int(a[rect][1] + 0.5) % 2) {
-			para = i * number_of_y_sections + a[rect][3] - 0.5;
+			para = i * xpsHelper_.GetHeight() + a[rect][3] - 0.5;
 			//std::cout << para << " " << vector_of_pairs_new[para][0] << " " << vector_of_pairs_new[para][2] << std::endl;
 			for (int j = a[rect][3] - 0.5; j >= a[rect][4] + 0.5; j--)
 			{
@@ -297,7 +295,7 @@ std::vector <int> PathHelper::snake_down_right(std::pair <int, int> start, int w
 		}
 		else
 		{
-			para = para + number_of_y_sections + 1;
+			para = para + xpsHelper_.GetHeight() + 1;
 			for (int j = a[rect][4] + 0.5; j <= a[rect][3] - 0.5; j++)
 			{
 				//std::cout << vector_of_pairs_new[para][0] << " " << i << " " << vector_of_pairs_new[para][1] << " " << j << " " << vector_of_pairs_new[para][2] << std::endl;
@@ -318,7 +316,7 @@ std::vector <int> PathHelper::snake_down_right(std::pair <int, int> start, int w
 
 	}
 	for (int i = a[rect][2] - 0.5; i <= a[rect][2] - 0.5; i++) {
-		para = i * number_of_y_sections + a[rect][3] - 0.5;
+		para = i * xpsHelper_.GetHeight() + a[rect][3] - 0.5;
 	for (int j = a[rect][3] - 0.5; j >= a[rect][4] + 0.5; j--)
 	{
 		//std::cout << vector_of_pairs_new[para][0] << " " << i << " " << vector_of_pairs_new[para][1] << " " << j << " " << vector_of_pairs_new[para][2] << std::endl;
@@ -343,7 +341,7 @@ std::vector <int> PathHelper::snake_down_left(std::pair <int, int> start, int wa
 	//std::cout << "rect" << rect << std::endl;
 	for (int i = a[rect][2] - 0.5; i > a[rect][1] + 0.5; i--) {
 		if (i % 2 == int(a[rect][2] - 0.5) % 2) {
-			para = i * number_of_y_sections + a[rect][3] - 0.5;
+			para = i * xpsHelper_.GetHeight() + a[rect][3] - 0.5;
 			for (int j = a[rect][3] - 0.5; j >= a[rect][4] + 0.5; j--)
 			{
 				//std::cout << vector_of_pairs_new[para][0] << " " << i << " " << vector_of_pairs_new[para][1] << " " << j << " " << vector_of_pairs_new[para][2] << std::endl;
@@ -362,7 +360,7 @@ std::vector <int> PathHelper::snake_down_left(std::pair <int, int> start, int wa
 		}
 		else
 		{
-			para = para - number_of_y_sections + 1;
+			para = para - xpsHelper_.GetHeight() + 1;
 			for (int j = a[rect][4] + 0.5; j <= a[rect][3] - 0.5; j++)
 			{
 				//std::cout << vector_of_pairs_new[para][0] << " " << i << " " << vector_of_pairs_new[para][1] << " " << j << " " << vector_of_pairs_new[para][2] << std::endl;
@@ -382,7 +380,7 @@ std::vector <int> PathHelper::snake_down_left(std::pair <int, int> start, int wa
 		}
 	}
 	for (int i = a[rect][1] + 0.5; i >= a[rect][1] + 0.5; i--) {
-		para = i * number_of_y_sections + a[rect][3] - 0.5;
+		para = i * xpsHelper_.GetHeight() + a[rect][3] - 0.5;
 		for (int j = a[rect][3] - 0.5; j >= a[rect][4] + 0.5; j--)
 		{
 			//std::cout << vector_of_pairs_new[para][0] << " " << i << " " << vector_of_pairs_new[para][1] << " " << j << " " << vector_of_pairs_new[para][2] << std::endl;
@@ -412,7 +410,7 @@ std::vector <int> PathHelper::snake_right_up(std::pair <int, int> start, int way
 			//std::cout << para << " " << vector_of_pairs_new[para][0] << " " << vector_of_pairs_new[para][2] << std::endl;
 			for (int j = a[rect][1] + 0.5; j <= a[rect][2] - 0.5; j++)
 			{
-				para = j * number_of_y_sections + m;
+				para = j * xpsHelper_.GetHeight() + m;
 				//std::cout << vector_of_pairs_new[para][0] << " " << j << " " << vector_of_pairs_new[para][1] << " " << i << " " << vector_of_pairs_new[para][2] << std::endl;
 				if (vector_of_pairs_new[para][0] == j && vector_of_pairs_new[para][1] == i && vector_of_pairs_new[para][2] == 1) {
 					snake_way.push_back(j);
@@ -431,7 +429,7 @@ std::vector <int> PathHelper::snake_right_up(std::pair <int, int> start, int way
 		{
 			for (int j = a[rect][2] - 0.5; j >= a[rect][1] + 0.5; j--)
 			{
-				para = j * number_of_y_sections + m;
+				para = j * xpsHelper_.GetHeight() + m;
 				//std::cout << vector_of_pairs_new[para][0] << " " << j << " " << vector_of_pairs_new[para][1] << " " << i << " " << vector_of_pairs_new[para][2] << std::endl;
 				if (vector_of_pairs_new[para][0] == j && vector_of_pairs_new[para][1] == i && vector_of_pairs_new[para][2] == 1) {
 					snake_way.push_back(j);
@@ -452,7 +450,7 @@ std::vector <int> PathHelper::snake_right_up(std::pair <int, int> start, int way
 	for (int i = a[rect][3] - 0.5; i <= a[rect][3] - 0.5; i++)
 	for (int j = a[rect][1] + 0.5; j <= a[rect][2] - 0.5; j++)
 	{
-		para = j * number_of_y_sections + m;
+		para = j * xpsHelper_.GetHeight() + m;
 		//std::cout << vector_of_pairs_new[para][0] << " " << j << " " << vector_of_pairs_new[para][1] << " " << i << " " << vector_of_pairs_new[para][2] << std::endl;
 		if (vector_of_pairs_new[para][0] == j && vector_of_pairs_new[para][1] == i && vector_of_pairs_new[para][2] == 1) {
 			snake_way.push_back(j);
@@ -477,7 +475,7 @@ std::vector <int> PathHelper::snake_right_down(std::pair <int, int> start, int w
 			//std::cout  << vector_of_pairs_new[para][0] << " " << vector_of_pairs_new[para][1] << std::endl;
 			for (int j = a[rect][1] + 0.5; j <= a[rect][2] - 0.5; j++)
 			{
-				para = j * number_of_y_sections + m;
+				para = j * xpsHelper_.GetHeight() + m;
 				//	std::cout << vector_of_pairs_new[para][0] << " " << j << " " << vector_of_pairs_new[para][1] << " " << i << " " << vector_of_pairs_new[para][2] << std::endl;
 				if (vector_of_pairs_new[para][0] == j && vector_of_pairs_new[para][1] == i && vector_of_pairs_new[para][2] == 1) {
 					snake_way.push_back(j);
@@ -496,7 +494,7 @@ std::vector <int> PathHelper::snake_right_down(std::pair <int, int> start, int w
 		{
 			for (int j = a[rect][2] - 0.5; j >= a[rect][1] + 0.5; j--)
 			{
-				para = j * number_of_y_sections + m;
+				para = j * xpsHelper_.GetHeight() + m;
 				//	std::cout << vector_of_pairs_new[para][0] << " " << j << " " << vector_of_pairs_new[para][1] << " " << i << " " << vector_of_pairs_new[para][2] << std::endl;
 				if (vector_of_pairs_new[para][0] == j && vector_of_pairs_new[para][1] == i && vector_of_pairs_new[para][2] == 1) {
 					snake_way.push_back(j);
@@ -517,7 +515,7 @@ std::vector <int> PathHelper::snake_right_down(std::pair <int, int> start, int w
 	for (int i = a[rect][4] + 0.5; i >= a[rect][4] + 0.5; i--)
 	for (int j = a[rect][1] + 0.5; j <= a[rect][2] - 0.5; j++)
 	{
-		para = j * number_of_y_sections + m;
+		para = j * xpsHelper_.GetHeight() + m;
 		//	std::cout << vector_of_pairs_new[para][0] << " " << j << " " << vector_of_pairs_new[para][1] << " " << i << " " << vector_of_pairs_new[para][2] << std::endl;
 		if (vector_of_pairs_new[para][0] == j && vector_of_pairs_new[para][1] == i && vector_of_pairs_new[para][2] == 1) {
 			snake_way.push_back(j);
@@ -542,7 +540,7 @@ std::vector <int> PathHelper::snake_left_up(std::pair <int, int> start, int way,
 			//std::cout << para << " " << vector_of_pairs_new[para][0] << " " << vector_of_pairs_new[para][2] << std::endl;
 			for (int j = a[rect][2] - 0.5; j >= a[rect][1] + 0.5; j--)
 			{
-				para = j * number_of_y_sections + i;
+				para = j * xpsHelper_.GetHeight() + i;
 				//	std::cout << vector_of_pairs_new[para][0] << " " << j << " " << vector_of_pairs_new[para][1] << " " << i << " " << vector_of_pairs_new[para][2] << std::endl;
 				if (vector_of_pairs_new[para][0] == j && vector_of_pairs_new[para][1] == i && vector_of_pairs_new[para][2] == 1) {
 					snake_way.push_back(j);
@@ -561,7 +559,7 @@ std::vector <int> PathHelper::snake_left_up(std::pair <int, int> start, int way,
 		{
 			for (int j = a[rect][1] + 0.5; j <= a[rect][2] - 0.5; j++)
 			{
-				para = j * number_of_y_sections + i;
+				para = j * xpsHelper_.GetHeight() + i;
 				//std::cout << vector_of_pairs_new[para][0] << " " << j << " " << vector_of_pairs_new[para][1] << " " << i << " " << vector_of_pairs_new[para][2] << std::endl;
 				if (vector_of_pairs_new[para][0] == j && vector_of_pairs_new[para][1] == i && vector_of_pairs_new[para][2] == 1) {
 					snake_way.push_back(j);
@@ -582,7 +580,7 @@ std::vector <int> PathHelper::snake_left_up(std::pair <int, int> start, int way,
 	for (int i = a[rect][3] - 0.5; i <= a[rect][3] - 0.5; i++)
 	for (int j = a[rect][2] - 0.5; j >= a[rect][1] + 0.5; j--)
 	{
-		para = j * number_of_y_sections + i;
+		para = j * xpsHelper_.GetHeight() + i;
 		//	std::cout << vector_of_pairs_new[para][0] << " " << j << " " << vector_of_pairs_new[para][1] << " " << i << " " << vector_of_pairs_new[para][2] << std::endl;
 		if (vector_of_pairs_new[para][0] == j && vector_of_pairs_new[para][1] == i && vector_of_pairs_new[para][2] == 1) {
 			snake_way.push_back(j);
@@ -606,7 +604,7 @@ std::vector <int> PathHelper::snake_left_down(std::pair <int, int> start, int wa
 
 			//std::cout  << vector_of_pairs_new[para][0] << " " << vector_of_pairs_new[para][1] << std::endl;
 			for (int j = a[rect][2] - 0.5; j >= a[rect][1] + 0.5; j--) {
-				para = j * number_of_y_sections + i;
+				para = j * xpsHelper_.GetHeight() + i;
 				//std::cout << vector_of_pairs_new[para][0] << " " << j << " " << vector_of_pairs_new[para][1] << " " << i << " " << vector_of_pairs_new[para][2] << std::endl;
 				if (vector_of_pairs_new[para][0] == j && vector_of_pairs_new[para][1] == i && vector_of_pairs_new[para][2] == 1) {
 					snake_way.push_back(j);
@@ -625,7 +623,7 @@ std::vector <int> PathHelper::snake_left_down(std::pair <int, int> start, int wa
 		{
 			for (int j = a[rect][1] + 0.5; j <= a[rect][2] - 0.5; j++)
 			{
-				para = j * number_of_y_sections + i;
+				para = j * xpsHelper_.GetHeight() + i;
 				//std::cout << vector_of_pairs_new[para][0] << " " << j << " " << vector_of_pairs_new[para][1] << " " << i << " " << vector_of_pairs_new[para][2] << std::endl;
 				if (vector_of_pairs_new[para][0] == j && vector_of_pairs_new[para][1] == i && vector_of_pairs_new[para][2] == 1) {
 					snake_way.push_back(j);
@@ -645,7 +643,7 @@ std::vector <int> PathHelper::snake_left_down(std::pair <int, int> start, int wa
 	}
 	for (int i = a[rect][4] + 0.5; i >= a[rect][4] + 0.5; i--)
 	for (int j = a[rect][2] - 0.5; j >= a[rect][1] + 0.5; j--) {
-		para = j * number_of_y_sections + i;
+		para = j * xpsHelper_.GetHeight() + i;
 		//std::cout << vector_of_pairs_new[para][0] << " " << j << " " << vector_of_pairs_new[para][1] << " " << i << " " << vector_of_pairs_new[para][2] << std::endl;
 		if (vector_of_pairs_new[para][0] == j && vector_of_pairs_new[para][1] == i && vector_of_pairs_new[para][2] == 1) {
 			snake_way.push_back(j);
@@ -661,9 +659,9 @@ std::vector <int> PathHelper::snake_left_down(std::pair <int, int> start, int wa
 	return snake_way;
 }
 
-std::pair <int, int> find_the_neighbor(std::pair <int,int> end) {
-	int min_x = number_of_x_sections - 1;
-	int min_y = number_of_y_sections - 1;
+std::pair <int, int> PathHelper::find_the_neighbor(std::pair <int,int> end) const {
+	int min_x = xpsHelper_.GetWidth() - 1;
+	int min_y = xpsHelper_.GetHeight() - 1;
 	double min_w = pow((pow(min_x, 2) + pow(min_y, 2)), 0.5);
 	for (int i = 0; i < number_of_rect; i++) {
 		if (a[i][5] - 0 < 0.001) {
@@ -707,8 +705,6 @@ std::pair <int, int> find_the_neighbor(std::pair <int,int> end) {
 
 
 void PathHelper::WriteXPSPath() {
-//	double m = number_of_y_sections / (2. + 1.);
-//	std::cout << m << std::endl << std::endl;
 	std::cout << "Part_1_start" << "\n";
 	std::vector<std::vector<int> > vector_of_pairs_new = create_field(); //28 :/
 	std::cout << "Part_1_finish" << "\n";

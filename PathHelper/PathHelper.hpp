@@ -46,6 +46,10 @@ private:
 	Direction GetDirection(int lhs, int rhs);
 	std::vector<std::pair<int, int>> GetVertexGeometry(int vertex);
 
+	std::vector<std::vector<int>> create_field() const;
+	void create_walls(int p, int direction) const;
+	std::pair <int, int> find_the_neighbor(std::pair <int,int> end) const;
+
 	std::vector<int> path_;
 	
 	const XPSHelper& xpsHelper_;

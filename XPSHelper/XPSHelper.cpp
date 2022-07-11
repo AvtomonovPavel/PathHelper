@@ -124,10 +124,12 @@ XPSHelper::XPSHelper(const char* XPSFilePath) {
 	height_ = 0;
 	for (int i = 0; i < geometry_.size(); ++i)
 		height_ = std::max(height_, geometry_[i].second);
+	height_++;
 
 	width_ = 0;
 	for (int i = 0; i < geometry_.size(); ++i)
 		width_ = std::max(width_, geometry_[i].first);
+	width_++;
 
 	std::cout << "XPSHelper constructor OK" << std::endl;
 }
