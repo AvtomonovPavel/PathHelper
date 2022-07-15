@@ -1,4 +1,4 @@
-#include "PathHelper.hpp"
+#include "Board.hpp"
 
 #include <iostream>
 #include <stdexcept>

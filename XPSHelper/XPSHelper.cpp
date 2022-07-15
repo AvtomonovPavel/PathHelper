@@ -98,8 +98,6 @@ XPSHelper::XPSHelper(const char* XPSFilePath) {
 	}
 	linesSegments.push_back({curVertexStart, curLineNum-1});
 
-	
-
 	std::cout << "Storage OK" << std::endl;
 
 	int gcd_x = std::__gcd(geometry_[0].first, geometry_[1].first);
@@ -123,16 +121,38 @@ XPSHelper::XPSHelper(const char* XPSFilePath) {
 	std::cout << "XPSHelper constructor OK" << std::endl;
 }
 
+int XPSHelper::GetPointsCount() const {
+	return geometry_.size();
+}
 
-int XPSHelper::GetWellNum(std::pair<int, int> coords) const {
+int XPSHelper::GetPointNum(std::pair<int, int> coords) const {
 	return geomToNum_.at(coords);
 }
 
-std::pair<int, int> XPSHelper::GetWellCoords(int num) const {
+std::pair<int, int> XPSHelper::GetPointCoords(int num) const {
 	return geometry_[num];
 }
 
 
 std::pair<int, int> XPSHelper::GetOldCoords(int num) const {
 	return oldGeometry_[num];
+}
+
+bool XPSHelper::IsNeighbours(int lhs, int rhs) const {
+	const auto& [x1, y1] = GetPointCoords(lhs);
+	const auto& [x2, y2] = GetPointCoords(rhs);
+
+	std::vector<std::pair<int, int>> dirs = {{1, 0},
+											 {0, 1},
+											 {-1, 0},
+											 {0, -1}};
+
+
+	for(const auto& dir : dirs) {
+		auto to = std::make_pair(x1 + dir.first, y1 + dir.second);
+		if(to == std::make_pair(x2, y2))
+			return true;
+	}
+
+	return false;
 }

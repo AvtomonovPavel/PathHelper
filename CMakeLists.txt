@@ -8,6 +8,22 @@ set(CMAKE_CXX_FLAGS "-O3")
 add_executable(Pathfinder Pathfinder.cpp)
 add_dependencies(Pathfinder XPSTest true_field)
 
+add_subdirectory(Block)
+target_link_libraries(Pathfinder PUBLIC Block)
+target_include_directories(Pathfinder PUBLIC Block)
+
+add_subdirectory(Board)
+target_link_libraries(Pathfinder PUBLIC Board)
+target_include_directories(Pathfinder PUBLIC Board)
+
+add_subdirectory(Bound)
+target_link_libraries(Pathfinder PUBLIC Bound)
+target_include_directories(Pathfinder PUBLIC Bound)
+
+add_subdirectory(Snake)
+target_link_libraries(Pathfinder PUBLIC Snake)
+target_include_directories(Pathfinder PUBLIC Snake)
+
 add_subdirectory(XPSHelper)
 target_link_libraries(Pathfinder PUBLIC XPSHelper)
 target_include_directories(Pathfinder PUBLIC XPSHelper)
@@ -16,14 +32,9 @@ add_subdirectory(TimeChecker)
 target_link_libraries(Pathfinder PUBLIC TimeChecker)
 target_include_directories(Pathfinder PUBLIC TimeChecker)
 
-add_subdirectory(G3)
-target_link_libraries(Pathfinder PUBLIC G3)
-target_include_directories(Pathfinder PUBLIC G3)
-
 add_subdirectory(PathHelper)
 target_link_libraries(Pathfinder PUBLIC PathHelper)
 target_include_directories(Pathfinder PUBLIC PathHelper)
-
 
 
 add_custom_target(XPSTest
