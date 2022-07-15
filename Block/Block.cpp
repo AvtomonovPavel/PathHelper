@@ -64,7 +64,7 @@ int Block::GetRightBound() const {
 	}
 	for(int i = 0; i < Size().second; ++i) {
 		if(points_[Size().first - 1][i] != -1) {
-			return xps_.GetPointCoords(points_[Size().first - 1][i]).second;
+			return xps_.GetPointCoords(points_[Size().first - 1][i]).first;
 		}
 	}
 	return -1;
@@ -101,5 +101,6 @@ PointType Block::GetPointType(int point_num) const {
 
 bool Block::IsCorner(int point_num) const {
 	PointType type = GetPointType(point_num);
+	//std::cout << "type "<< type << "\n";
 	return type == ULCORNER || type == URCORNER || type == DLCORNER || type == DRCORNER;
 }
